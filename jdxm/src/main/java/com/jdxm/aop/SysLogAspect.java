@@ -31,7 +31,7 @@ public class SysLogAspect {
     public void logPoinCut( )   {
     }
 
-    @Around(value=" logPoinCut()")
+    @Before(value=" logPoinCut()")
     public void saveSysLog(JoinPoint joinPoint) throws Exception {
         System.out.println("开启切面");
         //保存日志
