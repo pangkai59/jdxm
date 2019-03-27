@@ -23,16 +23,16 @@ import java.util.Date;
 @Component
 public class SysLogAspect {
 
-   @Autowired
-   private SysLogService sysLogService;
+    @Autowired
+    private SysLogService sysLogService;
 
 
     @Pointcut( "@annotation(com.jdxm.annotation.OperateLogs)")
     public void logPoinCut( )   {
     }
 
-    @Before(value=" logPoinCut()")
-    public void saveSysLog(JoinPoint joinPoint) {
+    @Around(value=" logPoinCut()")
+    public void saveSysLog(JoinPoint joinPoint) throws Exception {
         System.out.println("开启切面");
         //保存日志
         SysLog sysLog = new SysLog();
@@ -64,7 +64,7 @@ public class SysLogAspect {
         sysLog.setCreateTime(new Date());
         //获取用户名
         User user=(User)SecurityUtils.getSubject().getPrincipal();
-        sysLog.setUserId(user.getUid());
+     //   sysLog.setUserId(user.getUid());
         //获取用户ip地址
         sysLog.setIp(IpUtils.getIpAdress());
 
