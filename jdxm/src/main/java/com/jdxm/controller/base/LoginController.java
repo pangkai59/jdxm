@@ -6,14 +6,19 @@ import com.jdxm.utils.RedisCacheUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import javax.xml.ws.Action;
 
 @RestController
 @RequestMapping("login")
 public class LoginController {
+
+    @Autowired
+    private RedisCacheUtil redisCacheUtil;
 
     @RequestMapping("/logininfo")
     public String login() {
@@ -39,6 +44,11 @@ public class LoginController {
             subject.login(usernamePasswordToken);
             //获得用户对象
             User user=(User) subject.getPrincipal();
+            try{
+                redisCacheUtil.set("user",user.getUsername());
+            }catch(Exception e){
+                throw e;
+            }
             //存入session
             session.setAttribute("user", user);
             return "success";
